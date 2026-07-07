@@ -21,10 +21,14 @@ export function computeStageLayout(
     fitMode === "contain"
       ? Math.min(viewportWidth / DESIGN.width, viewportHeight / DESIGN.height)
       : Math.max(viewportWidth / DESIGN.width, viewportHeight / DESIGN.height);
+  const renderedHeight = DESIGN.height * scale;
+  const verticalOverflow = renderedHeight - viewportHeight;
+  const shouldPreserveBottomChrome =
+    fitMode === "cover" && verticalOverflow > 0 && verticalOverflow <= 120;
 
   return {
     scale,
     x: (viewportWidth - DESIGN.width * scale) / 2,
-    y: (viewportHeight - DESIGN.height * scale) / 2,
+    y: shouldPreserveBottomChrome ? -verticalOverflow : -verticalOverflow / 2,
   };
 }

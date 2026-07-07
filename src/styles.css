@@ -32,12 +32,9 @@ body {
 
 #viewport {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: calc(-1 * env(safe-area-inset-bottom));
-  left: 0;
-  height: calc(100dvh + env(safe-area-inset-bottom));
-  min-height: calc(100dvh + env(safe-area-inset-bottom));
+  inset: 0;
+  height: 100dvh;
+  min-height: 100dvh;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -60,10 +57,30 @@ body {
   display: block;
 }
 
+.status-mask,
 .date-mask,
 .date-overlay,
 .safety-mark {
   position: absolute;
+}
+
+.status-mask {
+  z-index: 2;
+  background: #64d900;
+}
+
+.status-mask--left {
+  left: var(--status-left-left);
+  top: var(--status-left-top);
+  width: var(--status-left-width);
+  height: var(--status-left-height);
+}
+
+.status-mask--right {
+  left: var(--status-right-left);
+  top: var(--status-right-top);
+  width: var(--status-right-width);
+  height: var(--status-right-height);
 }
 
 .date-mask {

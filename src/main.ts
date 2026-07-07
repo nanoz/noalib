@@ -1,8 +1,8 @@
 import "./styles.css";
 import {
   DESIGN,
-  IPHONE_16_PRO_VIEWPORT,
   OVERLAYS,
+  STATUS_BAR_MASKS,
   TEMPLATE_SRC,
   UPDATE_INTERVAL_MS,
   WATERMARK,
@@ -22,7 +22,6 @@ type AppState = {
 const params = new URLSearchParams(window.location.search);
 const fixedNow = parseNowParameter(params.get("now"));
 const hasInvalidNow = params.has("now") && fixedNow === null;
-const forceIPhone16ProViewport = params.get("device") === "iphone16pro";
 const state: AppState = {
   debug: params.get("debug") === "1",
   fitMode: getFitMode(params),
@@ -45,6 +44,8 @@ app.innerHTML = `
   <main id="viewport" aria-label="mTicket Naolib non valable">
     <section id="stage">
       <img id="ticket-template" src="${TEMPLATE_SRC}" alt="Mockup de ticket Naolib non valable" />
+      <div class="status-mask status-mask--left" aria-hidden="true"></div>
+      <div class="status-mask status-mask--right" aria-hidden="true"></div>
       <div class="date-mask date-mask--start" aria-hidden="true"></div>
       <div class="date-mask date-mask--end" aria-hidden="true"></div>
       <div id="start-date" class="date-overlay date-overlay--start"></div>
@@ -88,6 +89,14 @@ function applyOverlayGeometry(): void {
   stage.style.setProperty("--end-mask-height", `${OVERLAYS.endDate.mask.height}px`);
   stage.style.setProperty("--end-text-left", `${OVERLAYS.endDate.text.left}px`);
   stage.style.setProperty("--end-text-top", `${OVERLAYS.endDate.text.top}px`);
+  stage.style.setProperty("--status-left-left", `${STATUS_BAR_MASKS.left.left}px`);
+  stage.style.setProperty("--status-left-top", `${STATUS_BAR_MASKS.left.top}px`);
+  stage.style.setProperty("--status-left-width", `${STATUS_BAR_MASKS.left.width}px`);
+  stage.style.setProperty("--status-left-height", `${STATUS_BAR_MASKS.left.height}px`);
+  stage.style.setProperty("--status-right-left", `${STATUS_BAR_MASKS.right.left}px`);
+  stage.style.setProperty("--status-right-top", `${STATUS_BAR_MASKS.right.top}px`);
+  stage.style.setProperty("--status-right-width", `${STATUS_BAR_MASKS.right.width}px`);
+  stage.style.setProperty("--status-right-height", `${STATUS_BAR_MASKS.right.height}px`);
   stage.style.setProperty("--watermark-left", `${WATERMARK.left}px`);
   stage.style.setProperty("--watermark-top", `${WATERMARK.top}px`);
 }
@@ -106,17 +115,12 @@ function renderDates(): void {
 }
 
 function getViewportSize(): { width: number; height: number } {
-  const screenWidth = Math.round(Math.min(window.screen.width, window.screen.height));
-  const screenHeight = Math.round(Math.max(window.screen.width, window.screen.height));
-  const isIPhone16ProScreen =
-    screenWidth === IPHONE_16_PRO_VIEWPORT.width &&
-    screenHeight === IPHONE_16_PRO_VIEWPORT.height;
-  const isStandalone =
-    window.matchMedia("(display-mode: standalone)").matches ||
-    ("standalone" in window.navigator && window.navigator.standalone === true);
-
-  if (forceIPhone16ProViewport || (isStandalone && isIPhone16ProScreen)) {
-    return IPHONE_16_PRO_VIEWPORT;
+  const visualViewport = window.visualViewport;
+  if (visualViewport) {
+    return {
+      width: visualViewport.width || window.innerWidth,
+      height: visualViewport.height || window.innerHeight,
+    };
   }
 
   const rect = viewport.getBoundingClientRect();

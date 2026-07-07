@@ -19,6 +19,11 @@ export const OVERLAYS = {
   },
 } as const;
 
+export const STATUS_BAR_MASKS = {
+  left: { left: 92, top: 66, width: 278, height: 82 },
+  right: { left: 830, top: 66, width: 288, height: 82 },
+} as const;
+
 export const WATERMARK = {
   text: "SPECIMEN — NON VALABLE",
   left: 520,
