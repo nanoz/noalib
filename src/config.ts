@@ -3,6 +3,11 @@ export const DESIGN = {
   height: 2622,
 } as const;
 
+export const IPHONE_16_PRO_VIEWPORT = {
+  width: 402,
+  height: 874,
+} as const;
+
 export const OVERLAYS = {
   startDate: {
     mask: { left: 130, top: 1200, width: 460, height: 62 },

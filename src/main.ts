@@ -1,5 +1,12 @@
 import "./styles.css";
-import { DESIGN, OVERLAYS, TEMPLATE_SRC, UPDATE_INTERVAL_MS, WATERMARK } from "./config";
+import {
+  DESIGN,
+  IPHONE_16_PRO_VIEWPORT,
+  OVERLAYS,
+  TEMPLATE_SRC,
+  UPDATE_INTERVAL_MS,
+  WATERMARK,
+} from "./config";
 import { computeValidityWindow, formatNaolibDate, parseNowParameter } from "./date";
 import { computeStageLayout, getFitMode, type FitMode, type StageLayout } from "./layout";
 
@@ -15,6 +22,7 @@ type AppState = {
 const params = new URLSearchParams(window.location.search);
 const fixedNow = parseNowParameter(params.get("now"));
 const hasInvalidNow = params.has("now") && fixedNow === null;
+const forceIPhone16ProViewport = params.get("device") === "iphone16pro";
 const state: AppState = {
   debug: params.get("debug") === "1",
   fitMode: getFitMode(params),
@@ -58,6 +66,7 @@ function requireElement<T extends Element>(selector: string): T {
 }
 
 const stage = requireElement<HTMLElement>("#stage");
+const viewport = requireElement<HTMLElement>("#viewport");
 const template = requireElement<HTMLImageElement>("#ticket-template");
 const startDate = requireElement<HTMLDivElement>("#start-date");
 const endDate = requireElement<HTMLDivElement>("#end-date");
@@ -96,8 +105,31 @@ function renderDates(): void {
   renderDebugPanel();
 }
 
+function getViewportSize(): { width: number; height: number } {
+  const screenWidth = Math.round(Math.min(window.screen.width, window.screen.height));
+  const screenHeight = Math.round(Math.max(window.screen.width, window.screen.height));
+  const isIPhone16ProScreen =
+    screenWidth === IPHONE_16_PRO_VIEWPORT.width &&
+    screenHeight === IPHONE_16_PRO_VIEWPORT.height;
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    ("standalone" in window.navigator && window.navigator.standalone === true);
+
+  if (forceIPhone16ProViewport || (isStandalone && isIPhone16ProScreen)) {
+    return IPHONE_16_PRO_VIEWPORT;
+  }
+
+  const rect = viewport.getBoundingClientRect();
+
+  return {
+    width: rect.width || window.innerWidth,
+    height: rect.height || window.innerHeight,
+  };
+}
+
 function renderLayout(): void {
-  state.layout = computeStageLayout(window.innerWidth, window.innerHeight, state.fitMode);
+  const { width, height } = getViewportSize();
+  state.layout = computeStageLayout(width, height, state.fitMode);
   stage.style.transform = `translate3d(${state.layout.x}px, ${state.layout.y}px, 0) scale(${state.layout.scale})`;
   renderDebugPanel();
 }
@@ -112,7 +144,8 @@ function renderDebugPanel(): void {
 
   debugPanel.textContent = [
     `canvas: ${DESIGN.width} x ${DESIGN.height}`,
-    `viewport: ${window.innerWidth} x ${window.innerHeight}`,
+    `viewport: ${Math.round(getViewportSize().width)} x ${Math.round(getViewportSize().height)}`,
+    `screen: ${Math.round(window.screen.width)} x ${Math.round(window.screen.height)}`,
     `fit: ${state.fitMode}`,
     `scale: ${state.layout.scale.toFixed(4)}`,
     `start: ${state.startText}`,

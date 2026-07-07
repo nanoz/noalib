@@ -24,9 +24,23 @@ Useful URLs:
 /?now=2026-06-23T19:32:00+02:00
 /?now=2026-06-23T19:32:00+02:00&fit=contain
 /?debug=1
+/?debug=1&device=iphone16pro
 ```
 
-`now` freezes the reference time. `fit=contain` shows the whole mockup for calibration. `debug=1` shows viewport, scale, canvas, and computed date data while keeping the non-valid safety mark visible.
+`now` freezes the reference time. `fit=contain` shows the whole mockup for calibration. `debug=1` shows viewport, screen, scale, canvas, and computed date data while keeping the non-valid safety mark visible. `device=iphone16pro` forces the iPhone 16 Pro layout viewport for calibration.
+
+## Home Screen Display
+
+For the least browser chrome on iPhone, open the site from the iOS Home Screen. The app is configured with:
+
+- `apple-mobile-web-app-capable=yes`
+- `apple-mobile-web-app-status-bar-style=black-translucent`
+- `viewport-fit=cover`
+- manifest `display=fullscreen` with `standalone` fallback
+
+The iPhone 16 Pro layout target is `402 x 874` CSS pixels, matching Apple's `1206 x 2622` native display resolution at 3x. In installed Home Screen mode on that device, the app uses the screen dimensions rather than iOS's sometimes-shifting `innerHeight`, which avoids a bottom strip below the tab bar.
+
+iOS controls the time, signal, and battery status area. If the installed Home Screen app still shows those system indicators, there is no reliable web-only switch to force-hide them across iOS versions.
 
 ## Checks
 
