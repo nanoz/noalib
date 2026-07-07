@@ -1,12 +1,12 @@
-# Naolib mTicket Preview
+# Preview
 
-Static Vite + TypeScript frontend that renders a Naolib mTicket PNG mockup and overlays dynamic validity dates. It is visibly marked as non-valid and is not a transport ticket.
+Static Vite + TypeScript frontend that renders a PNG mockup and overlays dynamic validity dates. It is visibly marked as non-valid and is not a transport ticket.
 
 ## Safety
 
 - The screen always displays `SPECIMEN — NON VALABLE`.
 - The app does not generate a valid QR code.
-- The app does not call Naolib APIs or any other production validation service.
+- The app does not call Nxxlib APIs or any other production validation service.
 - The app does not store user data, cookies, analytics, credentials, or secrets.
 
 ## Local Development
@@ -68,37 +68,37 @@ The workflow at `.github/workflows/deploy-pages.yml` deploys `dist` on pushes to
 ```txt
 Settings -> Pages
 Build and deployment source: GitHub Actions
-Custom domain: naolib.arno.bzh
+Custom domain: nxxlib.arno.bzh
 ```
 
 The repository includes `public/CNAME` with:
 
 ```txt
-naolib.arno.bzh
+nxxlib.arno.bzh
 ```
 
 GitHub's current Pages documentation distinguishes apex domains from subdomains:
 
 - Apex domains, such as `example.com`, use `A` records pointing at GitHub Pages IP addresses.
-- Subdomains, such as `www.example.com` or `naolib.arno.bzh`, are documented with a `CNAME` record pointing at the GitHub Pages default domain.
+- Subdomains, such as `www.example.com` or `nxxlib.arno.bzh`, are documented with a `CNAME` record pointing at the GitHub Pages default domain.
 
 If this host is configured with `A` records, use the GitHub Pages IPv4 addresses:
 
 ```txt
 Type: A
-Name: naolib
+Name: nxxlib
 Value: 185.199.108.153
 
 Type: A
-Name: naolib
+Name: nxxlib
 Value: 185.199.109.153
 
 Type: A
-Name: naolib
+Name: nxxlib
 Value: 185.199.110.153
 
 Type: A
-Name: naolib
+Name: nxxlib
 Value: 185.199.111.153
 ```
 
@@ -106,7 +106,7 @@ For the GitHub-documented subdomain setup, create this record instead:
 
 ```txt
 Type: CNAME
-Name: naolib
+Name: nxxlib
 Target: <github-owner>.github.io
 Proxy: DNS only, if using Cloudflare
 ```

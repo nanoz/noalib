@@ -1,25 +1,25 @@
-# PRD — Naolib mTicket Dynamic Validity Preview
+# PRD — Nxxlib mTicket Dynamic Validity Preview
 
 ## 1. Product summary
 
-Build a small static frontend application that displays a Naolib mTicket mockup full-screen on an iPhone 16-sized mobile viewport and dynamically overlays the two ticket validity date/time values.
+Build a small static frontend application that displays a Nxxlib mTicket mockup full-screen on an iPhone 16-sized mobile viewport and dynamically overlays the two ticket validity date/time values.
 
 The app must compute the dates client-side from the current time:
 
 - `Début de validité` = current time minus 50 minutes
 - `Fin de validité` = current time plus 10 minutes
 
-The app is intended for a short Naolib stakeholder preview. It must be deployable from GitHub Pages under the custom domain:
+The app is intended for a short Nxxlib stakeholder preview. It must be deployable from GitHub Pages under the custom domain:
 
 ```txt
-naolib.arno.bzh
+nxxlib.arno.bzh
 ```
 
 The implementation should be minimal, static, deterministic, and easy to inspect.
 
 ## 2. Context
 
-The user has a PNG mockup of the Naolib mobile ticket screen. The current PNG already contains hardcoded date/time values. The goal is not to rebuild the full Naolib application, but to use this PNG as a visual background and overlay only the dynamic date/time values in the exact positions of the original text.
+The user has a PNG mockup of the Nxxlib mobile ticket screen. The current PNG already contains hardcoded date/time values. The goal is not to rebuild the full Nxxlib application, but to use this PNG as a visual background and overlay only the dynamic date/time values in the exact positions of the original text.
 
 The preview must work on mobile Chrome on iPhone. The ideal display mode is a Home Screen / standalone web app view to reduce browser chrome and approximate a native app-like full-screen display.
 
@@ -34,7 +34,7 @@ Mandatory constraints:
    - `NON VALABLE COMME TITRE DE TRANSPORT`
 2. The watermark must remain visible on the rendered screen.
 3. Do not generate a valid QR code.
-4. Do not call any Naolib production validation API.
+4. Do not call any Nxxlib production validation API.
 5. Do not claim that the rendered screen is a valid ticket.
 6. Do not include authentication tokens, API keys, private URLs, or production secrets.
 7. Do not attempt to bypass transport validation systems.
@@ -65,12 +65,12 @@ Support a query parameter that freezes the current time for deterministic presen
 
 The app must not:
 
-1. Rebuild Naolib’s real ticketing system.
+1. Rebuild Nxxlib’s real ticketing system.
 2. Authenticate a real user.
 3. Validate or purchase tickets.
 4. Generate real tickets.
 5. Generate, modify, or validate real QR codes.
-6. Connect to Naolib APIs.
+6. Connect to Nxxlib APIs.
 7. Store user data.
 8. Require a backend.
 9. Require a database.
@@ -80,7 +80,7 @@ The app must not:
 
 ### Primary user
 
-A presentation operator showing a static frontend proof of concept to Naolib stakeholders on an iPhone 16.
+A presentation operator showing a static frontend proof of concept to Nxxlib stakeholders on an iPhone 16.
 
 ### Secondary users
 
@@ -191,7 +191,7 @@ Acceptance criteria:
 - Workflow builds the static app.
 - Workflow deploys the build output to GitHub Pages.
 - GitHub Pages source is expected to be configured as `GitHub Actions`.
-- The app supports the custom domain `naolib.arno.bzh`.
+- The app supports the custom domain `nxxlib.arno.bzh`.
 
 ## 9. Functional requirements
 
@@ -349,13 +349,13 @@ The app must include:
 - Mobile viewport meta tags
 - Apple mobile web app meta tags
 - App title
-- Theme color matching Naolib green
+- Theme color matching Nxxlib green
 - Basic icons if available, or documented placeholders
 
 Suggested app name:
 
 ```txt
-Naolib mTicket
+Nxxlib mTicket
 ```
 
 ### FR11 — Debug/calibration mode
@@ -387,7 +387,7 @@ public/CNAME
 with exactly:
 
 ```txt
-naolib.arno.bzh
+nxxlib.arno.bzh
 ```
 
 This is useful for branch-based Pages deployments and repository portability, even though custom GitHub Actions deployments also require Pages settings to be configured separately.
@@ -724,33 +724,33 @@ Required setup steps:
 3. Configure custom domain:
 
    ```txt
-   naolib.arno.bzh
+   nxxlib.arno.bzh
    ```
 
-4. At the DNS provider for `arno.bzh`, configure DNS for `naolib.arno.bzh`.
+4. At the DNS provider for `arno.bzh`, configure DNS for `nxxlib.arno.bzh`.
 
    GitHub's Pages documentation distinguishes apex domains from subdomains:
 
    - Apex domains, such as `example.com`, use `A` records pointing at GitHub Pages IP addresses.
-   - Subdomains, such as `www.example.com` or `naolib.arno.bzh`, are documented with a `CNAME` record pointing at the GitHub Pages default domain.
+   - Subdomains, such as `www.example.com` or `nxxlib.arno.bzh`, are documented with a `CNAME` record pointing at the GitHub Pages default domain.
 
    If this host is configured with `A` records, use the GitHub Pages IPv4 addresses:
 
    ```txt
    Type: A
-   Name: naolib
+   Name: nxxlib
    Value: 185.199.108.153
 
    Type: A
-   Name: naolib
+   Name: nxxlib
    Value: 185.199.109.153
 
    Type: A
-   Name: naolib
+   Name: nxxlib
    Value: 185.199.110.153
 
    Type: A
-   Name: naolib
+   Name: nxxlib
    Value: 185.199.111.153
    ```
 
@@ -758,14 +758,14 @@ Required setup steps:
 
    ```txt
    Type: CNAME
-   Name: naolib
+   Name: nxxlib
    Target: <github-owner>.github.io
    Proxy: DNS only, if using Cloudflare
    ```
 
 5. Enable HTTPS once GitHub Pages certificate provisioning is ready.
 
-The repository should still include `public/CNAME` with `naolib.arno.bzh`, but README must state that GitHub Actions-based Pages deployments require the GitHub Pages custom domain setting to be configured.
+The repository should still include `public/CNAME` with `nxxlib.arno.bzh`, but README must state that GitHub Actions-based Pages deployments require the GitHub Pages custom domain setting to be configured.
 
 ## 18. Definition of done
 
@@ -794,7 +794,7 @@ Use a layered DOM approach:
 ```html
 <div id="viewport">
   <div id="stage">
-    <img id="ticket-template" src="/ticket-template.png" alt="Naolib non-valid ticket mockup" />
+    <img id="ticket-template" src="/ticket-template.png" alt="Nxxlib non-valid ticket mockup" />
 
     <div class="date-mask date-mask--start"></div>
     <div class="date-mask date-mask--end"></div>
@@ -889,7 +889,7 @@ export function computeValidityWindow(now: Date): {
 ```
 
 ```ts
-export function formatNaolibDate(date: Date): string
+export function formatNxxlibDate(date: Date): string
 ```
 
 Expected behavior:
@@ -1002,11 +1002,11 @@ body,
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#64d900" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content="Naolib mTicket" />
+<meta name="apple-mobile-web-app-title" content="Nxxlib mTicket" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="manifest" href="/manifest.webmanifest" />
 ```
 
 ## G. Codex implementation instruction
 
-Implement this PRD exactly. Favor the smallest robust solution. Use Vite + TypeScript + vanilla DOM/CSS. Create all repository files required to run locally, test date logic, build static assets, and deploy to GitHub Pages with the custom domain `naolib.arno.bzh`. Do not remove the visible non-valid safety mark. Do not generate a real ticket or a valid QR code.
+Implement this PRD exactly. Favor the smallest robust solution. Use Vite + TypeScript + vanilla DOM/CSS. Create all repository files required to run locally, test date logic, build static assets, and deploy to GitHub Pages with the custom domain `nxxlib.arno.bzh`. Do not remove the visible non-valid safety mark. Do not generate a real ticket or a valid QR code.
