@@ -43,12 +43,12 @@ export function computeStageLayout(
       : Math.max(viewportWidth / DESIGN.width, viewportHeight / DESIGN.height);
   const renderedHeight = DESIGN.height * scale;
   const verticalOverflow = renderedHeight - viewportHeight;
-  const shouldPreserveBottomChrome =
+  const shouldKeepPhoneMockTopAligned =
     fitMode === "cover" && verticalOverflow > 0 && verticalOverflow <= 120;
 
   return {
     scale,
     x: (viewportWidth - DESIGN.width * scale) / 2,
-    y: shouldPreserveBottomChrome ? -verticalOverflow : -verticalOverflow / 2,
+    y: shouldKeepPhoneMockTopAligned ? 0 : -verticalOverflow / 2,
   };
 }

@@ -17,12 +17,11 @@ describe("computeStageLayout", () => {
     expect(DESIGN.height / IPHONE_16_PRO_VIEWPORT.height).toBe(3);
   });
 
-  it("bottom-aligns cover overflow so the tab bar is not clipped", () => {
+  it("top-aligns small cover overflow so the status area is not clipped", () => {
     const layout = computeStageLayout(IPHONE_16_PRO_VIEWPORT.width, 852, "cover");
-    const renderedHeight = DESIGN.height * layout.scale;
 
     expect(layout.scale).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
-    expect(layout.y).toBeCloseTo(852 - renderedHeight, 6);
+    expect(layout.y).toBeCloseTo(0, 6);
   });
 
   it("keeps the iPhone canvas at the top when visual viewport excludes the status area", () => {
