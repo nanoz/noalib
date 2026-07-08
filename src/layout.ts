@@ -8,8 +8,28 @@ export type StageLayout = {
   y: number;
 };
 
+export type StageViewportSize = {
+  width: number;
+  height: number;
+};
+
+export type StageViewportSource = {
+  innerWidth: number;
+  innerHeight: number;
+  visualViewport?: Pick<VisualViewport, "width" | "height"> | null;
+};
+
 export function getFitMode(params: URLSearchParams): FitMode {
   return params.get("fit") === "contain" ? "contain" : "cover";
+}
+
+export function getStageViewportSize(source: StageViewportSource): StageViewportSize {
+  const visualViewport = source.visualViewport;
+
+  return {
+    width: Math.max(source.innerWidth, visualViewport?.width ?? 0),
+    height: Math.max(source.innerHeight, visualViewport?.height ?? 0),
+  };
 }
 
 export function computeStageLayout(

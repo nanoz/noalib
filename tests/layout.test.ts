@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DESIGN, IPHONE_16_PRO_VIEWPORT } from "../src/config";
-import { computeStageLayout } from "../src/layout";
+import { computeStageLayout, getStageViewportSize } from "../src/layout";
 
 describe("computeStageLayout", () => {
   it("matches the native iPhone 16 Pro portrait canvas exactly", () => {
@@ -23,6 +23,22 @@ describe("computeStageLayout", () => {
 
     expect(layout.scale).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
     expect(layout.y).toBeCloseTo(852 - renderedHeight, 6);
+  });
+
+  it("keeps the iPhone canvas at the top when visual viewport excludes the status area", () => {
+    const viewport = getStageViewportSize({
+      innerWidth: IPHONE_16_PRO_VIEWPORT.width,
+      innerHeight: IPHONE_16_PRO_VIEWPORT.height,
+      visualViewport: {
+        width: IPHONE_16_PRO_VIEWPORT.width,
+        height: 812,
+      },
+    });
+    const layout = computeStageLayout(viewport.width, viewport.height, "cover");
+
+    expect(viewport.height).toBe(IPHONE_16_PRO_VIEWPORT.height);
+    expect(layout.scale).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
+    expect(layout.y).toBeCloseTo(0, 6);
   });
 
   it("keeps large cover overflow centered for non-phone debug viewports", () => {

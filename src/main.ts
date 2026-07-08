@@ -8,7 +8,13 @@ import {
   WATERMARK,
 } from "./config";
 import { computeValidityWindow, formatNaolibDate, parseNowParameter } from "./date";
-import { computeStageLayout, getFitMode, type FitMode, type StageLayout } from "./layout";
+import {
+  computeStageLayout,
+  getFitMode,
+  getStageViewportSize,
+  type FitMode,
+  type StageLayout,
+} from "./layout";
 
 type AppState = {
   debug: boolean;
@@ -67,7 +73,6 @@ function requireElement<T extends Element>(selector: string): T {
 }
 
 const stage = requireElement<HTMLElement>("#stage");
-const viewport = requireElement<HTMLElement>("#viewport");
 const template = requireElement<HTMLImageElement>("#ticket-template");
 const startDate = requireElement<HTMLDivElement>("#start-date");
 const endDate = requireElement<HTMLDivElement>("#end-date");
@@ -115,20 +120,7 @@ function renderDates(): void {
 }
 
 function getViewportSize(): { width: number; height: number } {
-  const visualViewport = window.visualViewport;
-  if (visualViewport) {
-    return {
-      width: visualViewport.width || window.innerWidth,
-      height: visualViewport.height || window.innerHeight,
-    };
-  }
-
-  const rect = viewport.getBoundingClientRect();
-
-  return {
-    width: rect.width || window.innerWidth,
-    height: rect.height || window.innerHeight,
-  };
+  return getStageViewportSize(window);
 }
 
 function renderLayout(): void {
