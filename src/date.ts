@@ -16,6 +16,12 @@ export function computeValidityWindow(now: Date): ValidityWindow {
   };
 }
 
+export function millisecondsUntilNextMinute(now: Date): number {
+  const elapsedInCurrentMinute = now.getSeconds() * 1000 + now.getMilliseconds();
+
+  return elapsedInCurrentMinute === 0 ? MINUTE_MS : MINUTE_MS - elapsedInCurrentMinute;
+}
+
 export function formatNaolibDate(date: Date): string {
   const parts = new Intl.DateTimeFormat("fr-FR", {
     timeZone: PARIS_TIME_ZONE,

@@ -31,5 +31,4 @@ export const WATERMARK = {
 } as const;
 
 export const TEMPLATE_SRC = "/ticket-template.png";
-export const UPDATE_INTERVAL_MS = 30_000;
 export const PARIS_TIME_ZONE = "Europe/Paris";

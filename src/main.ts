@@ -4,10 +4,14 @@ import {
   OVERLAYS,
   STATUS_BAR_MASKS,
   TEMPLATE_SRC,
-  UPDATE_INTERVAL_MS,
   WATERMARK,
 } from "./config";
-import { computeValidityWindow, formatNaolibDate, parseNowParameter } from "./date";
+import {
+  computeValidityWindow,
+  formatNaolibDate,
+  millisecondsUntilNextMinute,
+  parseNowParameter,
+} from "./date";
 import {
   computeStageLayout,
   getFitMode,
@@ -78,6 +82,7 @@ const startDate = requireElement<HTMLDivElement>("#start-date");
 const endDate = requireElement<HTMLDivElement>("#end-date");
 const debugPanel = requireElement<HTMLElement>("#debug-panel");
 const assetError = requireElement<HTMLElement>("#asset-error");
+let dateRefreshTimeoutId: number | null = null;
 
 function applyOverlayGeometry(): void {
   stage.style.setProperty("--design-width", `${DESIGN.width}px`);
@@ -119,6 +124,29 @@ function renderDates(): void {
   renderDebugPanel();
 }
 
+function clearDateRefreshTimer(): void {
+  if (dateRefreshTimeoutId === null) {
+    return;
+  }
+
+  window.clearTimeout(dateRefreshTimeoutId);
+  dateRefreshTimeoutId = null;
+}
+
+function scheduleNextDateRefresh(): void {
+  if (state.fixedNow !== null) {
+    clearDateRefreshTimer();
+    return;
+  }
+
+  clearDateRefreshTimer();
+  dateRefreshTimeoutId = window.setTimeout(() => {
+    dateRefreshTimeoutId = null;
+    renderDates();
+    scheduleNextDateRefresh();
+  }, millisecondsUntilNextMinute(new Date()));
+}
+
 function getViewportSize(): { width: number; height: number } {
   return getStageViewportSize(window);
 }
@@ -153,6 +181,9 @@ function handleVisibilityChange(): void {
   if (document.visibilityState === "visible") {
     renderDates();
     renderLayout();
+    scheduleNextDateRefresh();
+  } else {
+    clearDateRefreshTimer();
   }
 }
 
@@ -165,8 +196,8 @@ template.addEventListener("error", () => {
 applyOverlayGeometry();
 renderLayout();
 renderDates();
+scheduleNextDateRefresh();
 
 window.addEventListener("resize", renderLayout, { passive: true });
 window.addEventListener("orientationchange", renderLayout, { passive: true });
 document.addEventListener("visibilitychange", handleVisibilityChange);
-window.setInterval(renderDates, UPDATE_INTERVAL_MS);

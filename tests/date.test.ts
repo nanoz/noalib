@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { computeValidityWindow, formatNaolibDate, parseNowParameter } from "../src/date";
+import {
+  computeValidityWindow,
+  formatNaolibDate,
+  millisecondsUntilNextMinute,
+  parseNowParameter,
+} from "../src/date";
 
 describe("computeValidityWindow", () => {
   it("computes the PRD reference validity window", () => {
@@ -44,5 +49,19 @@ describe("parseNowParameter", () => {
 
   it("rejects an invalid now query parameter", () => {
     expect(parseNowParameter("invalid")).toBeNull();
+  });
+});
+
+describe("millisecondsUntilNextMinute", () => {
+  it("waits a full minute when already on a minute boundary", () => {
+    expect(millisecondsUntilNextMinute(new Date("2026-06-23T19:32:00.000+02:00"))).toBe(60_000);
+  });
+
+  it("returns the remaining time until the next minute boundary", () => {
+    expect(millisecondsUntilNextMinute(new Date("2026-06-23T19:32:42.250+02:00"))).toBe(17_750);
+  });
+
+  it("handles the final millisecond before the next minute", () => {
+    expect(millisecondsUntilNextMinute(new Date("2026-06-23T19:32:59.999+02:00"))).toBe(1);
   });
 });
