@@ -126,7 +126,7 @@ function getViewportSize(): { width: number; height: number } {
 function renderLayout(): void {
   const { width, height } = getViewportSize();
   state.layout = computeStageLayout(width, height, state.fitMode);
-  stage.style.transform = `translate3d(${state.layout.x}px, ${state.layout.y}px, 0) scale(${state.layout.scale})`;
+  stage.style.transform = `translate3d(${state.layout.x}px, ${state.layout.y}px, 0) scale(${state.layout.scaleX}, ${state.layout.scaleY})`;
   renderDebugPanel();
 }
 
@@ -143,7 +143,7 @@ function renderDebugPanel(): void {
     `viewport: ${Math.round(getViewportSize().width)} x ${Math.round(getViewportSize().height)}`,
     `screen: ${Math.round(window.screen.width)} x ${Math.round(window.screen.height)}`,
     `fit: ${state.fitMode}`,
-    `scale: ${state.layout.scale.toFixed(4)}`,
+    `scale: ${state.layout.scaleX.toFixed(4)} x ${state.layout.scaleY.toFixed(4)}`,
     `start: ${state.startText}`,
     `end: ${state.endText}`,
   ].join("\n");

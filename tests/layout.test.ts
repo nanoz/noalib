@@ -11,16 +11,21 @@ describe("computeStageLayout", () => {
     );
 
     expect(layout.scale).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
+    expect(layout.scaleX).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
+    expect(layout.scaleY).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.height / DESIGN.height, 6);
     expect(layout.x).toBeCloseTo(0, 6);
     expect(layout.y).toBeCloseTo(0, 6);
     expect(DESIGN.width / IPHONE_16_PRO_VIEWPORT.width).toBe(3);
     expect(DESIGN.height / IPHONE_16_PRO_VIEWPORT.height).toBe(3);
   });
 
-  it("top-aligns small cover overflow so the status area is not clipped", () => {
+  it("fits small cover overflow vertically so the tab bar is not clipped", () => {
     const layout = computeStageLayout(IPHONE_16_PRO_VIEWPORT.width, 852, "cover");
 
-    expect(layout.scale).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
+    expect(layout.scaleX).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
+    expect(layout.scaleY).toBeCloseTo(852 / DESIGN.height, 6);
+    expect(DESIGN.width * layout.scaleX).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width, 6);
+    expect(DESIGN.height * layout.scaleY).toBeCloseTo(852, 6);
     expect(layout.y).toBeCloseTo(0, 6);
   });
 
@@ -37,6 +42,7 @@ describe("computeStageLayout", () => {
 
     expect(viewport.height).toBe(IPHONE_16_PRO_VIEWPORT.height);
     expect(layout.scale).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.width / DESIGN.width, 6);
+    expect(layout.scaleY).toBeCloseTo(IPHONE_16_PRO_VIEWPORT.height / DESIGN.height, 6);
     expect(layout.y).toBeCloseTo(0, 6);
   });
 
@@ -45,6 +51,7 @@ describe("computeStageLayout", () => {
     const renderedHeight = DESIGN.height * layout.scale;
 
     expect(renderedHeight - 852).toBeGreaterThan(120);
+    expect(layout.scaleY).toBeCloseTo(layout.scaleX, 6);
     expect(layout.y).toBeCloseTo((852 - renderedHeight) / 2, 6);
   });
 });

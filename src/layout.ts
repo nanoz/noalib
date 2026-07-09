@@ -4,6 +4,8 @@ export type FitMode = "cover" | "contain";
 
 export type StageLayout = {
   scale: number;
+  scaleX: number;
+  scaleY: number;
   x: number;
   y: number;
 };
@@ -37,18 +39,24 @@ export function computeStageLayout(
   viewportHeight: number,
   fitMode: FitMode,
 ): StageLayout {
-  const scale =
+  const coverScale =
     fitMode === "contain"
       ? Math.min(viewportWidth / DESIGN.width, viewportHeight / DESIGN.height)
       : Math.max(viewportWidth / DESIGN.width, viewportHeight / DESIGN.height);
-  const renderedHeight = DESIGN.height * scale;
+  const renderedHeight = DESIGN.height * coverScale;
   const verticalOverflow = renderedHeight - viewportHeight;
-  const shouldKeepPhoneMockTopAligned =
+  const shouldFitPhoneMockVertically =
     fitMode === "cover" && verticalOverflow > 0 && verticalOverflow <= 120;
+  const scaleX = coverScale;
+  const scaleY = shouldFitPhoneMockVertically ? viewportHeight / DESIGN.height : coverScale;
+  const renderedWidth = DESIGN.width * scaleX;
+  const fittedRenderedHeight = DESIGN.height * scaleY;
 
   return {
-    scale,
-    x: (viewportWidth - DESIGN.width * scale) / 2,
-    y: shouldKeepPhoneMockTopAligned ? 0 : -verticalOverflow / 2,
+    scale: scaleX,
+    scaleX,
+    scaleY,
+    x: (viewportWidth - renderedWidth) / 2,
+    y: shouldFitPhoneMockVertically ? 0 : (viewportHeight - fittedRenderedHeight) / 2,
   };
 }
