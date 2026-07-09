@@ -19,6 +19,7 @@ export type StageViewportSource = {
   innerWidth: number;
   innerHeight: number;
   visualViewport?: Pick<VisualViewport, "width" | "height"> | null;
+  screen?: Pick<Screen, "width" | "height"> | null;
 };
 
 export function getFitMode(params: URLSearchParams): FitMode {
@@ -27,10 +28,16 @@ export function getFitMode(params: URLSearchParams): FitMode {
 
 export function getStageViewportSize(source: StageViewportSource): StageViewportSize {
   const visualViewport = source.visualViewport;
+  const width = Math.max(source.innerWidth, visualViewport?.width ?? 0);
+  const reportedHeight = Math.max(source.innerHeight, visualViewport?.height ?? 0);
+  const screenHeight =
+    source.screen && Math.abs(source.screen.width - width) <= 1
+      ? source.screen.height
+      : 0;
 
   return {
-    width: Math.max(source.innerWidth, visualViewport?.width ?? 0),
-    height: Math.max(source.innerHeight, visualViewport?.height ?? 0),
+    width,
+    height: Math.max(reportedHeight, screenHeight),
   };
 }
 
@@ -39,24 +46,21 @@ export function computeStageLayout(
   viewportHeight: number,
   fitMode: FitMode,
 ): StageLayout {
-  const coverScale =
+  const scale =
     fitMode === "contain"
       ? Math.min(viewportWidth / DESIGN.width, viewportHeight / DESIGN.height)
       : Math.max(viewportWidth / DESIGN.width, viewportHeight / DESIGN.height);
-  const renderedHeight = DESIGN.height * coverScale;
+  const renderedHeight = DESIGN.height * scale;
   const verticalOverflow = renderedHeight - viewportHeight;
-  const shouldFitPhoneMockVertically =
+  const shouldKeepPhoneMockTopAligned =
     fitMode === "cover" && verticalOverflow > 0 && verticalOverflow <= 120;
-  const scaleX = coverScale;
-  const scaleY = shouldFitPhoneMockVertically ? viewportHeight / DESIGN.height : coverScale;
-  const renderedWidth = DESIGN.width * scaleX;
-  const fittedRenderedHeight = DESIGN.height * scaleY;
+  const renderedWidth = DESIGN.width * scale;
 
   return {
-    scale: scaleX,
-    scaleX,
-    scaleY,
+    scale,
+    scaleX: scale,
+    scaleY: scale,
     x: (viewportWidth - renderedWidth) / 2,
-    y: shouldFitPhoneMockVertically ? 0 : (viewportHeight - fittedRenderedHeight) / 2,
+    y: shouldKeepPhoneMockTopAligned ? 0 : -verticalOverflow / 2,
   };
 }

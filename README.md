@@ -37,7 +37,7 @@ For the least browser chrome on iPhone, open the site from the iOS Home Screen. 
 - `viewport-fit=cover`
 - manifest `display=fullscreen` with `standalone` fallback
 
-The iPhone 16 Pro layout target is `402 x 874` CSS pixels, matching Apple's `1206 x 2622` native display resolution at 3x. The layout keeps phone-shaped cover renders top-aligned even when iOS reports a slightly shorter viewport, and it applies a small vertical-only fit in that case so the bottom tab bar remains visible. The real iOS status bar remains visible over the green header. Only the duplicate status-bar artwork baked into the PNG is masked, so the real iOS time, signal, and battery do not appear twice.
+The iPhone 16 Pro layout target is `402 x 874` CSS pixels, matching Apple's `1206 x 2622` native display resolution at 3x. The layout keeps phone-shaped cover renders full-screen and top-aligned even when iOS reports a slightly shorter visual viewport, using the device screen height when the screen width matches the app width. The real iOS status bar remains visible over the green header. Only the duplicate status-bar artwork baked into the PNG is masked, so the real iOS time, signal, and battery do not appear twice.
 
 iOS controls the time, signal, and battery status area. If the installed Home Screen app still shows those system indicators, there is no reliable web-only switch to force-hide them across iOS versions.
 
